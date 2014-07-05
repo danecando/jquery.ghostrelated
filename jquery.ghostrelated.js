@@ -1,3 +1,9 @@
+/*!
+ * jquery.ghostrelated
+ * -v 0.1.0
+ * Copyright (C) 2014 Dane Grant (danecando@gmail.com)
+ * License: MIT
+ */
 ;(function($) {
 
     defaults = {
