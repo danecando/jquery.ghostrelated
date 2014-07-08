@@ -1,8 +1,8 @@
 /*!
- * jquery.ghostrelated
- * -v 0.1.0
- * Copyright (C) 2014 Dane Grant (danecando@gmail.com)
- * License: MIT
+ * @package jquery.ghostrelated
+ * @version 0.1.1
+ * @Copyright (C) 2014 Dane Grant (danecando@gmail.com)
+ * @License MIT
  */
 ;(function($) {
 
@@ -22,42 +22,29 @@
         this.displayRelated();
     };
 
-
     RelatedPosts.prototype.displayRelated = function() {
 
-        try {
-            // Get current post information
-            // Plugin is dependent on this data because matches are only made by tags at this time
-            this._currentPostTags = this.getCurrentPostTags(this.options.tagsClass);
+        this._currentPostTags = this.getCurrentPostTags(this.options.tagsClass);
 
-            var that = this;
+        var that = this;
+        $.ajax({
+            url: this.options.feed,
+            type: 'GET'
+        })
+            .done(function(data) {
 
-            $.ajax({
-                url: this.options.feed,
-                type: 'GET'
-            })
-                .done(function(data) {
+                // Success fetching feed, find related posts and output them
+                var posts = that.getPosts(data);
+                var related = that.matchByTag(that._currentPostTags, posts);
 
-                    // Success fetching feed, find related posts and output them
-                    var posts = that.getPosts(data);
-                    var related = that.matchByTag(that._currentPostTags, posts);
-
-                    related.forEach(function(post) {
-                        $(that.element).append($('<li><a href="' + post.url + '">' + post.title + '</a></li>'));
-                    });
-                })
-                .fail(function(e) {
-                    throw Error(e);
+                related.forEach(function(post) {
+                    $(that.element).append($('<li><a href="' + post.url + '">' + post.title + '</a></li>'));
                 });
+            })
+            .fail(function(e) {
+                that.reportError(e);
+            });
 
-        } catch (e) {
-            if (this.options.debug) {
-                $(this.element).append($('<li>' + e.message + '</li>'));
-            } else {
-                console.log(this);
-                $(this.element).append($('<li>No related posts were found.</li>'));
-            }
-        }
     };
 
 
@@ -70,7 +57,7 @@
         var postTitle = $(titleClass).text();
 
         if (postTitle.length < 1) {
-            throw Error("Couldn't find the post title with class: " + titleClass)
+            this.reportError("Couldn't find the post title with class: " + titleClass);
         }
 
         return postTitle;
@@ -89,7 +76,7 @@
         });
 
         if (tags.length < 1) {
-            throw Error("Couldn't find any tags in this post");
+            this.reportError("Couldn't find any tags in this post");
         }
 
         return tags;
@@ -119,7 +106,7 @@
         }
 
         if (posts.length < 1) {
-            throw Error("Couldn't find any posts in feed: " + feed);
+            this.reportError("Couldn't find any posts in feed: " + feed);
         }
 
         return posts;
@@ -145,7 +132,21 @@
             });
         });
 
+        if (matches.length < 1) {
+            this.reportError("There are no closely related posts");
+        }
+
         return matches;
+    };
+
+
+    RelatedPosts.prototype.reportError = function(error) {
+
+        if (this.options.debug) {
+            $(this.element).append($('<li>' + error + '</li>'));
+        } else {
+            $(this.element).append($('<li>No related posts were found.</li>'));
+        }
     };
 
 
