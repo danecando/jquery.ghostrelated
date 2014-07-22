@@ -10,6 +10,7 @@
         feed: '/rss',
         titleClass: '.post-title',
         tagsClass: '.post-meta',
+        limit: 5,
         debug: false
     }
 
@@ -37,8 +38,12 @@
                 var posts = that.getPosts(data);
                 var related = that.matchByTag(that._currentPostTags, posts);
 
+                var count = 0;
                 related.forEach(function(post) {
-                    $(that.element).append($('<li><a href="' + post.url + '">' + post.title + '</a></li>'));
+                    if (count < that.options.limit) {
+                        $(that.element).append($('<li><a href="' + post.url + '">' + post.title + '</a></li>'));
+                    }
+                    count++;
                 });
             })
             .fail(function(e) {

@@ -66,6 +66,10 @@ It looks like this in casper:
         
 So the option uses .post-meta and the plugin looks for the anchor tags inside of it
 
+#### limit:
+
+Limit amount of related posts to be displayed
+
 #### debug:
 
 If the plugin isn't returning any related posts, set this option to true. This option will output error information to the list you created to help you figure out why the plugin is failing.
