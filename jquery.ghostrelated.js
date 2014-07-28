@@ -45,6 +45,11 @@
                     }
                     count++;
                 });
+
+                if (count == 0) {
+                    $(that.element).append($('<p>No related posts were found. ' +
+                        'Check the <a href="/">index</a>.</p>'));
+                }
             })
             .fail(function(e) {
                 that.reportError(e);
@@ -146,11 +151,8 @@
 
 
     RelatedPosts.prototype.reportError = function(error) {
-
         if (this.options.debug) {
             $(this.element).append($('<li>' + error + '</li>'));
-        } else {
-            $(this.element).append($('<li>No related posts were found.</li>'));
         }
     };
 
