@@ -87,5 +87,8 @@ $('.related-posts').ghostRelated({
 ## Roadmap
 * More advanced post matching
 
+## Browser Support
+This plugin officially supports IE9+. You can include this [polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#Polyfill) in your theme for any browsers that don't support the JavaScript forEach() funciton.
+
 ## Credits
 * Inspired by [jquery.ghostHunter](https://github.com/i11ume/ghostHunter) - *an amazing search plugin for Ghost* 
