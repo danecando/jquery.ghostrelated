@@ -40,8 +40,8 @@
         });
 
         if (count == 0) {
-            $(this.element).append($('<p>No related posts were found. ' +
-                'Check the <a href="/">index</a>.</p>'));
+            $(this.element).append($('<li>No related posts were found. ' +
+                'Check the <a href="/">index</a>.</li>'));
         }
     
     };
@@ -82,7 +82,7 @@
             titleClass = '.' + titleClass;
         }
 
-        var postTitle = $(titleClass).text();
+        var postTitle = $(titleClass).eq(0).text();
 
         if (postTitle.length < 1) {
             this.reportError("Couldn't find the post title with class: " + titleClass);
