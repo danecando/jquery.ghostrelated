@@ -11,7 +11,13 @@
         titleClass: '.post-title',
         tagsClass: '.post-meta',
         limit: 5,
-        debug: false
+        debug: false,
+        messages: {
+            noRelated: 'No related posts were found. Check the <a href="/">index</a>.',
+            postNotFound: "Couldn't find the post title with class: ",
+            tagsNotFound: "Couldn't find any tags in this post",
+            noCloselyRelated: "There are no closely related posts"
+        }
     }
 
 
@@ -40,8 +46,7 @@
         });
 
         if (count == 0) {
-            $(this.element).append($('<p>No related posts were found. ' +
-                'Check the <a href="/">index</a>.</p>'));
+            $(this.element).append($('<li>' + this.options.messages.noRelated + '</li>'));
         }
     
     };
@@ -82,10 +87,10 @@
             titleClass = '.' + titleClass;
         }
 
-        var postTitle = $(titleClass).text();
+        var postTitle = $(titleClass).eq(0).text();
 
         if (postTitle.length < 1) {
-            this.reportError("Couldn't find the post title with class: " + titleClass);
+            this.reportError(this.options.messages.postNotFound + titleClass);
         }
 
         return postTitle;
@@ -104,7 +109,7 @@
         });
 
         if (tags.length < 1) {
-            this.reportError("Couldn't find any tags in this post");
+            this.reportError(this.options.messages.tagsNotFound);
         }
 
         return tags;
@@ -164,7 +169,7 @@
         });
 
         if (matches.length < 1) {
-            this.reportError("There are no closely related posts");
+            this.reportError(this.options.messages.noCloselyRelated);
         }
 
         return matches;
