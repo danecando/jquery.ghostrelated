@@ -11,8 +11,12 @@
         titleClass: '.post-title',
         tagsClass: '.post-meta',
         limit: 5,
-        debug: false
-    }
+        debug: false,
+        template: '<li><a href="{url}">{title}</a></li>',
+        messages: {
+            noRelated: 'No related posts were found.'
+        }
+    };
 
 
     function RelatedPosts(element, options) {
@@ -32,18 +36,23 @@
 
         var related = this.matchByTag(this._currentPostTags, posts);
 
+        var options = this.options;
+
         related.forEach(function(post) {
+            var template = options.template.replace(/{[^{}]+}/g, function (key) {
+                return post[key.replace(/[{}]+/g, '')] || '';
+            });
+
             if (count < self.options.limit) {
-                $(self.element).append($('<li><a href="' + post.url + '">' + post.title + '</a></li>'));
+                $(self.element).append($(template));
             }
             count++;
         });
 
         if (count == 0) {
-            $(this.element).append($('<p>No related posts were found. ' +
-                'Check the <a href="/">index</a>.</p>'));
+            $(this.element).append($('<li>' + this.messages.noRelated + '</li>'));
         }
-    
+
     };
 
     RelatedPosts.prototype.parseRss = function(pageNum, prevId, feeds) {

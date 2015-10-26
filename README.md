@@ -40,7 +40,11 @@ defaults = {
     feed: '/rss',
     titleClass: '.post-title',
     tagsClass: '.post-meta',
-    debug: false
+    debug: false,
+    template: '<li><a href="{url}">{title}</a></li>',
+    messages: {
+        noRelated: 'No related posts were found.'
+    }
 }
 ```
             
@@ -74,12 +78,17 @@ Limit amount of related posts to be displayed
 
 If the plugin isn't returning any related posts, set this option to true. This option will output error information to the list you created to help you figure out why the plugin is failing.
 
+#### template:
+
+Specify the template for the related posts. You have access to all variables within the `post` object from the RSS feed, and you can echo them by wrapping them in braces.
+
 ## Start with custom options
 
 ```javascript
 $('.related-posts').ghostRelated({
     titleClass: '.my-title',
-    tagsClass: '.my-tags-class'
+    tagsClass: '.my-tags-class',
+    template: '<a href="{url}" class="panel panel-default"><div class="panel-heading">{title}</div></div>'
 });
 ```
             
