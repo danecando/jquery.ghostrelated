@@ -55,29 +55,15 @@
 
     };
 
-    RelatedPosts.prototype.parseRss = function(pageNum, prevId, feeds) {
-
-        var page = pageNum || 1,
-            prevId = prevId || '',
-            feeds = feeds || [],
-            self = this;
+    RelatedPosts.prototype.parseRss = function() {
 
         $.ajax({
-            url: this.options.feed + '/' + page,
+            url: this.options.feed
             type: 'GET'
         })
         .done(function(data, textStatus, xhr) {
-
-            var curId = $(data).find('item > guid').text();
-
-            if (curId != prevId) {
-                feeds.push(data);
-                self.parseRss(page+1, curId, feeds);
-            } else {
-                var posts = self.getPosts(feeds);
-                self.displayRelated(posts);
-            }
-
+          var posts = self.getPosts(data);
+          self.displayRelated(posts);
         })
         .fail(function(e) {
             self.reportError(e);
