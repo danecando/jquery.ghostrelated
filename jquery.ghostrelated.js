@@ -5,7 +5,7 @@
  * @License MIT
  */
 ;(function($) {
-    
+
     function RelatedPosts(element, options) {
         var defaults = {
                 feed: '/rss',
@@ -53,9 +53,9 @@
     };
 
     RelatedPosts.prototype.parseRss = function() {
-
+        var self = this;
         $.ajax({
-            url: this.options.feed
+            url: this.options.feed,
             type: 'GET'
         })
         .done(function(data, textStatus, xhr) {
@@ -103,13 +103,11 @@
     };
 
 
-    RelatedPosts.prototype.getPosts = function(feeds) {
+    RelatedPosts.prototype.getPosts = function(feed) {
 
         var posts = [], items = [];
 
-        feeds.forEach(function(feed) {
-            items = $.merge(items, $(feed).find('item'));
-        });
+        items = $.merge(items, $(feed).find('item'));
 
         for (var i = 0; i < items.length; i++) {
 
@@ -121,6 +119,7 @@
                     title: item.find('title').text(),
                     url: item.find('link').text(),
                     content: item.find('description').text(),
+                    image: item.find('media\\:content, content').attr('url'),
                     tags: $.map(item.find('category'), function(elem) {
                         return $(elem).text();
                     })
