@@ -5,22 +5,19 @@
  * @License MIT
  */
 ;(function($) {
-
-    defaults = {
-        feed: '/rss',
-        titleClass: '.post-title',
-        tagsClass: '.post-meta',
-        limit: 5,
-        debug: false,
-        template: '<li><a href="{url}">{title}</a></li>',
-        messages: {
-            noRelated: 'No related posts were found.'
-        }
-    };
-
-
+    
     function RelatedPosts(element, options) {
-
+        var defaults = {
+                feed: '/rss',
+                titleClass: '.post-title',
+                tagsClass: '.post-meta',
+                limit: 5,
+                debug: false,
+                template: '<li><a href="{url}">{title}</a></li>',
+                messages: {
+                    noRelated: 'No related posts were found.'
+                }
+            };
         this.element = element;
         this.options = $.extend({}, defaults, options);
 
