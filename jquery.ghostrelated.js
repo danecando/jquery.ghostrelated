@@ -6,21 +6,18 @@
  */
 ;(function($) {
 
-    defaults = {
-        feed: '/rss',
-        titleClass: '.post-title',
-        tagsClass: '.post-meta',
-        limit: 5,
-        debug: false,
-        template: '<li><a href="{url}">{title}</a></li>',
-        messages: {
-            noRelated: 'No related posts were found.'
-        }
-    };
-
-
     function RelatedPosts(element, options) {
-
+        var defaults = {
+                feed: '/rss',
+                titleClass: '.post-title',
+                tagsClass: '.post-meta',
+                limit: 5,
+                debug: false,
+                template: '<li><a href="{url}">{title}</a></li>',
+                messages: {
+                    noRelated: 'No related posts were found.'
+                }
+            };
         this.element = element;
         this.options = $.extend({}, defaults, options);
 
@@ -55,29 +52,15 @@
 
     };
 
-    RelatedPosts.prototype.parseRss = function(pageNum, prevId, feeds) {
-
-        var page = pageNum || 1,
-            prevId = prevId || '',
-            feeds = feeds || [],
-            self = this;
-
+    RelatedPosts.prototype.parseRss = function() {
+        var self = this;
         $.ajax({
-            url: this.options.feed + '/' + page,
+            url: this.options.feed,
             type: 'GET'
         })
         .done(function(data, textStatus, xhr) {
-
-            var curId = $(data).find('item > guid').text();
-
-            if (curId != prevId) {
-                feeds.push(data);
-                self.parseRss(page+1, curId, feeds);
-            } else {
-                var posts = self.getPosts(feeds);
-                self.displayRelated(posts);
-            }
-
+          var posts = self.getPosts(data);
+          self.displayRelated(posts);
         })
         .fail(function(e) {
             self.reportError(e);
@@ -120,13 +103,11 @@
     };
 
 
-    RelatedPosts.prototype.getPosts = function(feeds) {
+    RelatedPosts.prototype.getPosts = function(feed) {
 
         var posts = [], items = [];
 
-        feeds.forEach(function(feed) {
-            items = $.merge(items, $(feed).find('item'));
-        });
+        items = $.merge(items, $(feed).find('item'));
 
         for (var i = 0; i < items.length; i++) {
 
@@ -138,6 +119,7 @@
                     title: item.find('title').text(),
                     url: item.find('link').text(),
                     content: item.find('description').text(),
+                    image: item.find('media\\:content, content').attr('url'),
                     tags: $.map(item.find('category'), function(elem) {
                         return $(elem).text();
                     })
